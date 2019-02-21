@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block content %}
+			<h1 class = "mt-5"> Education </h1>
+            <h2 class="mt-5 ">Developer Survey Results</h1>
+            <p class="lead">Where do People have learnt to Code</p>
+
+
+
+<script type="text/javascript">
+window.onload = function () {
+
+var chart = new CanvasJS.Chart("chartContainer", {
+    theme: "light1", // "light2", "dark1", "dark2"
+    animationEnabled: true, // change to true
+    horizontalAlign: "center",      
+    title:{
+        text: "Where do people learn to code"
+    },
+    data: [
+    {
+        // Change type to "bar", "area", "spline", "pie",etc.
+        type: "column",
+        dataPoints: [
+            { label: "School or University",  y: {{univ[0][1] | round(2)}} },
+            { label: "Self taught", y: {{selft[0][1] | round(2)}}  },
+            { label: "Accelerated training Programmes", y: {{accel[1][1] | round(2)}}  },
+            { label: "Don't know to code",  y: {{dont[1][1] | round(2)}}  }
+        ]
+    }
+    ]
+});
+chart.render();
+
+}
+</script>
+<br>
+<div id="chartContainer" style="height: 400px; width: 65%;"></div>
+
+<br>
+<ul class="list-group">
+  <li class="list-group-item">Over {{univ[0][1] | round(2)}}% of people learnt to code from School or University.</li>
+  <li class="list-group-item">Over {{selft[0][1] | round(2)}}% of people learn to code by self teaching.</li>
+  <li class="list-group-item">Over {{accel[1][1] | round(2)}}% of people learn to code from accelerated training programmes.</li>
+  <li class="list-group-item">Over {{dont[1][1] | round(2)}}% of people don't know how to code.</li>
+</ul>
+
+{% endblock %}

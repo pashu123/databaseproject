@@ -1,0 +1,161 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<br>
+
+<h1> Where do people visit online to learn? </h1>
+
+<br>
+
+
+
+
+  <ul class="nav nav-tabs" role="tablist">
+    <li class="nav-item">
+      <a class="nav-link active" data-toggle="tab" href="#home">Total</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#menu1">By Male</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#menu2">By Female</a>
+    </li>
+       <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#menu3">Non Binary</a>
+    </li>
+  </ul>
+
+
+  <div class="tab-content">
+
+    <div id="home" class="container tab-pane active"><br>
+		<p class="lead">Showing the results Age group Wise percentage</p>
+		<br>
+
+		<form action = "/demo/5/" method = "POST">
+
+		  <div class="form-group col-md-4">
+		<label for="exampleFormControlSelect1">Select the age group</label>
+		<select class="form-control" id="exampleFormControlSelect1" name = "age">
+			<option>All</option>
+		  <option>18 - 24 years old</option>
+		  <option>25 - 34 years old</option>
+		  <option>35 - 44 years old</option>
+		  <option>45 - 54 years old</option>
+		  <option>55 - 64 years old</option>
+		  <option>65 - 74 years old</option>
+		</select>
+
+		<br>
+         
+         <p><input type = "submit" class = "btn btn-primary" value = "submit" /></p>
+
+         </div>
+
+      </form>
+
+      <br>
+      <p> Showing results for Age group : {{agegp}} </p>
+
+
+            <table id = "country1" class= "table table-striped table-bordered table-hover">
+                <thead class = "thead-dark">
+                    <tr class = "">
+                        <th scope="col">Learning Modes</th>
+                        <th scope="col">Percentage of People</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in totval %}
+                    <tr class = "">
+                    	{% if 'All' == agegp|string() %}
+                        <td scope="row">{{ row[0][0]}}</td>
+                        <td scope="row">{{ row[0][1]|round(2)}}</td>
+                        {% else %}
+                    		<td scope="row">{{ row[0][1]}}</td>
+                        <td scope="row">{{ row[0][2]|round(2)}}</td>
+						{% endif %}
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+			</div>
+
+
+			<div id="menu1" class="container tab-pane fade"><br>
+		<p class="lead">Showing the results according to male participants</p>
+		<br>
+
+
+            <table id = "country1" class= "table table-striped table-bordered table-hover">
+                <thead class = "thead-dark">
+                    <tr class = "">
+                        <th scope="col">Learning Modes</th>
+                        <th scope="col">Percentage of People</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in totm %}
+                    <tr class = "">
+                        <td scope="row">{{ row[0][0]}}</td>
+                        <td scope="row">{{ row[0][1]|round(2)}}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+			</div>
+
+			<div id="menu2" class="container tab-pane fade"><br>
+			<p class="lead">Showing the results according to female participants</p>
+			<br>
+
+
+			<table id = "country1" class= "table table-striped table-bordered table-hover">
+			    <thead class = "thead-dark">
+			        <tr class = "">
+			            <th scope="col">Learning Modes</th>
+			            <th scope="col">Percentage of People</th>
+			        </tr>
+			    </thead>
+			    <tbody>
+			        {% for row in totf %}
+			        <tr class = "">
+			            <td scope="row">{{ row[0][0]}}</td>
+			            <td scope="row">{{ row[0][1]|round(2)}}</td>
+			        </tr>
+			        {% endfor %}
+			    </tbody>
+			</table>
+			</div>
+
+			<div id="menu3" class="container tab-pane fade"><br>
+			<p class="lead">Showing the results according to non-binary participants</p>
+			<br>
+
+
+			<table id = "country1" class= "table table-striped table-bordered table-hover">
+			    <thead class = "thead-dark">
+			        <tr class = "">
+			            <th scope="col">Learning Modes</th>
+			            <th scope="col">Percentage of People</th>
+			        </tr>
+			    </thead>
+			    <tbody>
+			        {% for row in totb %}
+			        <tr class = "">
+			            <td scope="row">{{ row[0][0]}}</td>
+			            <td scope="row">{{ row[0][1]|round(2)}}</td>
+			        </tr>
+			        {% endfor %}
+			    </tbody>
+			</table>
+			</div>
+
+
+  
+  </div>
+
+
+
+{% endblock %}
