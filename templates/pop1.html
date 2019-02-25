@@ -2,16 +2,25 @@
 
 
 {% block content %}
+<br>
+<h1> Showing results of {{namefor[0]}} {{namefor[1]}} </h1>
 
+{% for row in results %}
 
-<table border = 1>
-         {% for key, value in result.items() %}
-            <tr>
-               <th> {{ key }} </th>
-               <td> {{ value }} </td>
-            </tr>
-         {% endfor %}
-      </table>
+{% if 'no' == row[0]| string()  %}
 
+<p> Your answer {{row[1]}} is wrong. </p>
+<p> The correct answer is {{row[2]}} </p>
+<a href="{{row[3]}}">For more details go to </a>
+
+{% else %}
+<p> Your answer {{row[0]}} is right. </p>
+<a href="{{row[1]}}">For more details go to </a>
+
+{% endif  %}
+
+{% endfor %}
+
+<p> Total score is {{score}} </p>
 
 {% endblock %}

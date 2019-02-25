@@ -594,9 +594,30 @@ def pred():
 @app.route('/pop/',methods = ['POST','GET'])
 def pop():
     if request.method == 'POST':
+        conn = connectToDB()
+        cur = conn.cursor()
         result = request.form
         print(result)
-        return render_template('pop1.html',result = result)
+        score = 0
+        totable = []
+        correctanslist = ['JavaScript','AngularJS','Python','React','Professional Growth and Learning','Problem Solving','Hard to Access skills before onsite',
+                            'Resume Screening','Previous Work Experience']
+        correctansgo = ['/tech/1/','/tech/6/','/tech/3/','/tech/4/','/work/1/','/work/3/','/work/4/','/work/5/','/work/2/']
+        name = [result['fname'],result['lname'],result['email']]
+        details = []
+        for i in range(9):
+            qsn = f'Q{i+1}'
+            if result[qsn] == correctanslist[i]:
+                totable.append((correctanslist[i],correctansgo[i]))
+                score += 1
+            else:
+                totable.append(('no',result[qsn],correctanslist[i],correctansgo[i]))
+            print(totable)
+        print(totable)
+
+        print(name)
+
+        return render_template('pop1.html',namefor = name,results = totable,score = score)
     return render_template('pop.html')
 
 
@@ -609,8 +630,3 @@ if __name__ == '__main__':
     app.run(debug = True)
 
 
-
-
-
-talskills = ['q19TalToolResumeScreen','q19TalToolReferral','q19TalToolHackerRank','q19TalToolOtherProbSolv',
-                'q19TalToolPersTest','q19TalToolRemoteorLiveIntTool','q19TalToolOutsourceHumIntPanel','q19TalToolOther']
