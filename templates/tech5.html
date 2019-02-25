@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<br>
+<div id="graph" style="min-width: 310px; height: 600px; margin: 0 auto"></div>
+
+<script>
+
+Highcharts.chart('graph', {
+  chart: {
+    type: 'column'
+  },
+  title: {
+    text: 'What Hiring Managers are looking for and What developers are practicing'
+  },
+  xAxis: {
+    categories: {{totf | safe}}
+  },
+  credits: {
+    enabled: false
+  },
+  series: [{
+    name: 'Developers',
+    data: {{totd | safe}}
+  }, {
+    name: 'Hiring Managers',
+    data: {{totm | safe}}
+  }, ]
+});
+
+</script>
+{% endblock %}

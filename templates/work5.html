@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<br>
+<div id="graph" style="min-width: 310px; height: 700px; margin: 0 auto"></div>
+
+<script>
+Highcharts.chart('graph', {
+  chart: {
+    type: 'column'
+  },
+  title: {
+    text: 'Assesment tools employers use'
+  },
+  xAxis: {
+    categories: {{totlang | safe}}
+  },
+  credits: {
+    enabled: false
+  },
+  series: [{
+    name: 'Percentage of Developers',
+    data: {{totval | safe}}
+  }]
+});
+
+</script>
+
+{% endblock %}

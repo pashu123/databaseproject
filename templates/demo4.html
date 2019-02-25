@@ -7,35 +7,31 @@
 
 
 
-<script type="text/javascript">
-window.onload = function () {
 
-var chart = new CanvasJS.Chart("chartContainer", {
-    theme: "light1", // "light2", "dark1", "dark2"
-    animationEnabled: true, // change to true
-    horizontalAlign: "center",      
-    title:{
-        text: "Where do people learn to code"
-    },
-    data: [
-    {
-        // Change type to "bar", "area", "spline", "pie",etc.
-        type: "column",
-        dataPoints: [
-            { label: "School or University",  y: {{univ[0][1] | round(2)}} },
-            { label: "Self taught", y: {{selft[0][1] | round(2)}}  },
-            { label: "Accelerated training Programmes", y: {{accel[1][1] | round(2)}}  },
-            { label: "Don't know to code",  y: {{dont[1][1] | round(2)}}  }
-        ]
-    }
-    ]
-});
-chart.render();
-
-}
-</script>
 <br>
-<div id="chartContainer" style="height: 400px; width: 65%;"></div>
+<div id="graph" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+
+<script>
+Highcharts.chart('graph', {
+  chart: {
+    type: 'column'
+  },
+  title: {
+    text: "Where do people learn to code"
+  },
+  xAxis: {
+    categories: ['School or University','Self taught','Accelerated training',"Don't know"]
+  },
+  credits: {
+    enabled: false
+  },
+  series: [{
+    name: 'Percentage of People',
+    data: [{{univ[0][1] | round(2)}},{{selft[0][1] | round(2)}},{{accel[1][1] | round(2)}},{{dont[1][1] | round(2)}} ]
+  }]
+});
+
+</script>
 
 <br>
 <ul class="list-group">

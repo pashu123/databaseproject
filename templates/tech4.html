@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<br>
+<div id="graph" style="min-width: 310px; height: 700px; margin: 0 auto"></div>
+
+<script>
+Highcharts.chart('graph', {
+  chart: {
+    type: 'column'
+  },
+  title: {
+    text: 'Love Hate Index of Frameworks'
+  },
+  xAxis: {
+    categories: {{totframes | safe}}
+  },
+  credits: {
+    enabled: false
+  },
+  series: [{
+    name: 'Language',
+    data: {{floatval | safe}}
+  }]
+});
+
+</script>
+
+{% endblock %}
