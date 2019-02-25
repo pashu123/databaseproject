@@ -4,9 +4,9 @@ import psycopg2.extras
 from flask import Flask,render_template,request
 app = Flask(__name__)
 
-
+# connectionstring = 'dbname = dbproject user = postgres password = pashu123 host = localhost'
 def connectToDB():
-    connectionstring = 'dbname = dbproject user = postgres password = pashu123 host = localhost'
+    connectionstring = 'dbname = group_30 user = group_30 password = 776-302-579 host = 10.17.50.247'
     print(connectionstring)
     try:
         return(psycopg2.connect(connectionstring))
@@ -151,8 +151,7 @@ def age_mooc():
                 if age == 'All':
                     script = f'''select {group}, (count(respondentid)*100/cast((select count(*) 
                         from datavalues) as numeric(10,4))) as percentage 
-                        from datavalues where {group} <> ''
-                        group by  {group};'''
+                        from datavalues where {group} <> 'Not This Resource' group by 1;'''
                 else:
                     script = f'''select q2age, {group}, (count(respondentid)*100/cast((select count(*) 
                             from datavalues where q2age = '{age}') as numeric(10,4))) as percentage 
@@ -160,15 +159,15 @@ def age_mooc():
                             group by q2age, {group};'''
                 script2 = f'''select  {group}, (count(respondentid)*100/cast((select count(*)
                             from datavalues where q3gender = 'Female') as numeric(10,4))) as percentage
-                            from datavalues where q3gender = 'Female' and {group} <> ''
+                            from datavalues where q3gender = 'Female' and {group} <> 'Not This Resource'
                             group by {group};'''
                 script3 = f'''select  {group}, (count(respondentid)*100/cast((select count(*)
                             from datavalues where q3gender = 'Male') as numeric(10,4))) as percentage
-                            from datavalues where q3gender = 'Male' and {group} <> ''
+                            from datavalues where q3gender = 'Male' and {group} <> 'Not This Resource'
                             group by {group};'''
                 script4 = f'''select  {group}, (count(respondentid)*100/cast((select count(*)
                             from datavalues where q3gender = 'Non-Binary') as numeric(10,4))) as percentage
-                            from datavalues where q3gender = 'Non-Binary' and {group} <> ''
+                            from datavalues where q3gender = 'Non-Binary' and {group} <> 'Not This Resource'
                             group by {group};'''
 
                 cur1.execute(script)
@@ -433,10 +432,6 @@ def work1():
             'q12JobCritImpactwithProduct','q12JobCritInterestProblems','q12JobCritFundingandValuation',
             'q12JobCritStability','q12JobCritProfGrowth']
 
-    # translate = ['Preferred tech stack','Company Mission','Company Culture','Good work life balance',
-    #                 'Compensation','Proximity to where you live','Perks','Smart People/team'
-    #                 'Impact on Product','Interesting Problems to Solve','Funding and Valuation',
-    #                 'Stability of large company','Professional Growth and Learning']
 
     result1 = []
     result2 = []
@@ -469,10 +464,10 @@ def work2():
     for l in corecomp:
         try:
 
-            script = f'''select {l}, (count(respondentid)*100/cast((select count(*) from datavalues 
-                        where {l} <> '#NULL!') as numeric(10,4))) as percentage 
-                        from datavalues where {l} <> '' and {l} <> '#NULL!' 
-                        group by {l} order by percentage desc;'''
+            script = f''' select {l}, (count(respondentid)*100/cast((select count(*) from datavalues where q16hiringmanager = 'Yes')
+                         as numeric(10,4))) as percentage
+                       from datavalues where {l} not in ('Not Hiring Manager', 'Not necessary')
+                       group by 1 order by percentage desc;'''
 
             print(script)
             cur.execute(script)
@@ -498,10 +493,10 @@ def work3():
     for l in oresume:
         try:
 
-            script = f'''select {l}, (count(respondentid)*100/cast((select count(*) from datavalues 
-                        where {l} <> '#NULL!') as numeric(10,4))) as percentage 
-                        from datavalues where {l} <> '' and {l} <> '#NULL!' 
-                        group by {l} order by percentage desc;'''
+            script = f'''select {l}, (count(respondentid)*100/cast((select count(*) from datavalues where q16hiringmanager = 'Yes')
+                         as numeric(10,4))) as percentage
+                       from datavalues where {l} not in ('Not Hiring Manager', 'Not necessary','Not top 3')
+                       group by 1 order by percentage desc;'''
 
             print(script)
             cur.execute(script)
@@ -526,10 +521,10 @@ def work4():
     for l in timecon:
         try:
 
-            script = f'''select {l}, (count(respondentid)*100/cast((select count(*) from datavalues 
-                        where {l} <> '#NULL!') as numeric(10,4))) as percentage 
-                        from datavalues where {l} <> '' and {l} <> '#NULL!' 
-                        group by {l} order by percentage desc;'''
+            script = f'''select {l}, (count(respondentid)*100/cast((select count(*) from datavalues where q16hiringmanager = 'Yes')
+                         as numeric(10,4))) as percentage
+                       from datavalues where {l} not in ('Not Hiring Manager', 'Not necessary','Not top 3','Not really a challenge')
+                       group by 1 order by percentage desc;'''
 
             print(script)
             cur.execute(script)
@@ -554,10 +549,10 @@ def work5():
     for l in talskills:
         try:
 
-            script = f'''select {l}, (count(respondentid)*100/cast((select count(*) from datavalues 
-                        where {l} <> '#NULL!') as numeric(10,4))) as percentage 
-                        from datavalues where {l} <> '' and {l} <> '#NULL!' 
-                        group by {l} order by percentage desc;'''
+            script = f'''select {l}, (count(respondentid)*100/cast((select count(*) from datavalues where q16hiringmanager = 'Yes')
+                         as numeric(10,4))) as percentage
+                       from datavalues where {l} not in ('Not Hiring Manager', 'Not necessary','Not top 3','Not really a challenge','Don''t use this tool')
+                       group by 1 order by percentage desc;'''
 
             print(script)
             cur.execute(script)
@@ -598,26 +593,36 @@ def pop():
         cur = conn.cursor()
         result = request.form
         print(result)
-        score = 0
         totable = []
-        correctanslist = ['JavaScript','AngularJS','Python','React','Professional Growth and Learning','Problem Solving','Hard to Access skills before onsite',
+        correctanslist = ['Java','AngularJS','Python','React','Professional Growth and Learning','Problem Solving','Hard to Access skills before onsite',
                             'Resume Screening','Previous Work Experience']
         correctansgo = ['/tech/1/','/tech/6/','/tech/3/','/tech/4/','/work/1/','/work/3/','/work/4/','/work/5/','/work/2/']
         name = [result['fname'],result['lname'],result['email']]
         details = []
         for i in range(9):
             qsn = f'Q{i+1}'
-            if result[qsn] == correctanslist[i]:
+            if result[qsn] == '':
+                totable.append((correctanslist[i],'',correctansgo[i]))
+            elif result[qsn] == correctanslist[i]:
                 totable.append((correctanslist[i],correctansgo[i]))
-                score += 1
             else:
                 totable.append(('no',result[qsn],correctanslist[i],correctansgo[i]))
             print(totable)
         print(totable)
 
-        print(name)
+        script = f''' insert into popquiz(fname, lname ,email ,Q1 ,Q2 ,Q3 ,Q4 ,Q5 ,Q6 ,Q7 ,Q8 ,Q9)
+                        values('{name[0]}', '{name[1]}', '{name[2]}','{totable[0][1]}','{totable[1][1]}','{totable[2][1]}','{totable[3][1]}','{totable[4][1]}',
+                        '{totable[5][1]}','{totable[6][1]}','{totable[7][1]}','{totable[8][1]}')
+                        on conflict (email) do update
+                        set fname = excluded.fname, 
+                        lname = excluded.lname, 
+                        Q1 = excluded.Q1 , Q2 = excluded.Q2 ,Q3 = excluded.Q3 ,
+                        Q4 = excluded.Q4 ,Q5 = excluded.Q5 ,Q6 = excluded.Q6,Q7 = excluded.Q7 ,Q8 = excluded.Q8 ,Q9 = excluded.Q9 ;'''
+        print(script)
+        cur.execute(script)
+        conn.commit()
 
-        return render_template('pop1.html',namefor = name,results = totable,score = score)
+        return render_template('pop1.html',namefor = name,results = totable)
     return render_template('pop.html')
 
 

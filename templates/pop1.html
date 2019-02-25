@@ -4,23 +4,24 @@
 {% block content %}
 <br>
 <h1> Showing results of {{namefor[0]}} {{namefor[1]}} </h1>
-
+<br>
+<ul class="list-group">
 {% for row in results %}
 
 {% if 'no' == row[0]| string()  %}
 
-<p> Your answer {{row[1]}} is wrong. </p>
-<p> The correct answer is {{row[2]}} </p>
-<a href="{{row[3]}}">For more details go to </a>
+<li class="list-group-item list-group-item-action list-group-item-danger">Your answer {{row[1]}} is wrong, The correct answer is {{row[2]}} <a href="{{row[3]}}"> For more details go to </a> </li>
+
+{% elif '' == row[1] | string() %}
+<li class="list-group-item list-group-item-action list-group-item-secondary">Didn't attempt , The correct answer is {{row[0]}} <a href="{{row[2]}}"> For more details go to </a> </li>
+
 
 {% else %}
-<p> Your answer {{row[0]}} is right. </p>
-<a href="{{row[1]}}">For more details go to </a>
 
+<li class="list-group-item list-group-item-action list-group-item-success">Your answer {{row[0]}} is right. <a href="{{row[1]}}"> For more details go to </a></li>
 {% endif  %}
-
 {% endfor %}
+</ul>
 
-<p> Total score is {{score}} </p>
 
 {% endblock %}
