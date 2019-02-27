@@ -638,9 +638,3 @@ def pop():
 if __name__ == '__main__':
     app.run(debug = True)
 
-
-
-
-f'''select {l1}, (count(respondentid)*100.0/(select count(*) from hiringmanager)) as percentage
-
-from hiringmanager where {l1} <> 'Missing or Neither' group by 1''';
