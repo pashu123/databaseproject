@@ -418,6 +418,32 @@ def tech5():
             print('Executing error')
     return render_template('tech5.html',totf = frames,totm = result1,totd = result2)
 
+@app.route('/tech/7/')
+def tech7():
+    conn = connectToDB()
+    cur = conn.cursor()
+    result = []
+    lang = ['Ocaml','CSharp','C','Kotlin','Haskell','Typescript','R',
+            'Rust','Erlang','CPlusPlus','Java','Go','Javascript','Ruby',
+            "Swift",'PHP','Perl','Pascal','Julia','Clojure','Lua','Python']
+    firststr = 'q25Lang'
+    for l in lang:
+        l = firststr + l
+        try:
+            script = f'''select {l}, count(respondentid)*100.0/(select count(respondentid) from datavalueswohm) as percentage
+                            from datavalueswohm where {l} not in ('Missing or Neither') group by 1;'''
+            print(script)
+            cur.execute(script)
+            int1 = cur.fetchall()
+            result.append(int1)
+        except:
+            print('Executing Error')
+
+    resultwill = [float(x[0][1]) for x in result]
+    resultknow = [float(x[1][1]) for x in result]
+    return render_template('tech7.html',totf = lang,totm = resultwill,totd = resultknow)
+
+
 
 
 
@@ -570,22 +596,25 @@ def work5():
     print(result2)
     return render_template('work5.html',totlang = result1,totval = result2)
 
+@app.route('/work/6/')
+def work6():
+    conn = connectToDB()
+    cur = conn.cursor()
+    result = []
+    try:
 
-
-
-
-
-
-
-################################################### Predictions #################################################################
-@app.route('/pred/')
-def pred():
-    return render_template('pred.html')
-
-
-
-
-
+        script = f'''select q27EmergingTechSkill, count(respondentid)*100.0/(select count(*) from datavalueswohm) as percentage
+                    from datavalueswohm where q27EmergingTechSkill not in ('') group by 1 order by 2 desc;'''
+        print(script)
+        cur.execute(script)
+        int1 = cur.fetchall()
+        result1 = [x[0] for x in int1]
+        result2 = [float(x[1]) for x in int1]
+        print(result1)
+        print(result2)
+    except:
+        print('Executing Error')
+    return render_template('work6.html',totlang = result1,totval = result2)
 
 
 
@@ -615,8 +644,8 @@ def pop():
         print(totable)
 
         script = f''' insert into popquiz(fname, lname ,email ,Q1 ,Q2 ,Q3 ,Q4 ,Q5 ,Q6 ,Q7 ,Q8 ,Q9)
-                        values('{name[0]}', '{name[1]}', '{name[2]}','{totable[0][1]}','{totable[1][1]}','{totable[2][1]}','{totable[3][1]}','{totable[4][1]}',
-                        '{totable[5][1]}','{totable[6][1]}','{totable[7][1]}','{totable[8][1]}')
+                        values('{name[0]}', '{name[1]}', '{name[2]}','{totable[0][0]}','{totable[1][0]}','{totable[2][0]}','{totable[3][0]}','{totable[4][0]}',
+                        '{totable[5][0]}','{totable[6][0]}','{totable[7][0]}','{totable[8][0]}')
                         on conflict (email) do update
                         set fname = excluded.fname, 
                         lname = excluded.lname, 
@@ -625,7 +654,7 @@ def pop():
         print(script)
         cur.execute(script)
         conn.commit()
-
+        print(totable)
         return render_template('pop1.html',namefor = name,results = totable)
     return render_template('pop.html')
 

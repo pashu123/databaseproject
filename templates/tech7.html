@@ -12,7 +12,7 @@ Highcharts.chart('graph', {
     type: 'column'
   },
   title: {
-    text: 'What Hiring Managers are looking for and What developers are practicing'
+    text: 'Programming language learning Trend'
   },
   xAxis: {
     categories: {{totf | safe}}
@@ -21,10 +21,10 @@ Highcharts.chart('graph', {
     enabled: false
   },
   series: [{
-    name: 'Developers',
+    name: 'knows',
     data: {{totd | safe}}
   }, {
-    name: 'Hiring Managers',
+    name: 'will learn',
     data: {{totm | safe}}
   }, ]
 });
@@ -33,8 +33,7 @@ Highcharts.chart('graph', {
 
 <br>
  <ul class="pagination">
-  <li class="page-item"><a class ="page-link" href="\tech\4\">Previous</a></li>
-  <li class="page-item"><a class ="page-link" href="\tech\7\">Next</a></li>
+  <li class="page-item"><a class ="page-link" href="\tech\5\">Previous</a></li>
 </ul>
 
 {% endblock %}
