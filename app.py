@@ -4,6 +4,8 @@ import psycopg2.extras
 from flask import Flask,render_template,request
 app = Flask(__name__)
 
+import time
+
 # connectionstring = 'dbname = dbproject user = postgres password = pashu123 host = localhost'
 def connectToDB():
     connectionstring = 'dbname = group_30 user = group_30 password = 776-302-579 host = 10.17.50.247'
@@ -333,9 +335,9 @@ def tech3():
         l = firststr+l
 
         try:
-            script1 = f''' select (count(respondentid)*100/cast((select count(*) from datavalues where {l} <> '') 
+            script1 = f''' select (count(respondentid)*100/cast((select count(*) from datavalues where {l} <> 'Neutral') 
                             as numeric(10,4))) as percentage from datavalues where {l} = 'Love'; '''
-            script2 = f''' select (count(respondentid)*100/cast((select count(*) from datavalues where {l} <> '') 
+            script2 = f''' select (count(respondentid)*100/cast((select count(*) from datavalues where {l} <> 'Neutral') 
                             as numeric(10,4))) as percentage from datavalues where {l} = 'Hate';'''
             cur1.execute(script1)
             cur2.execute(script2)
@@ -363,9 +365,9 @@ def tech4():
         l = firststr+l
 
         try:
-            script1 = f''' select (count(respondentid)*100/cast((select count(*) from datavalues where {l} <> '') 
+            script1 = f''' select (count(respondentid)*100/cast((select count(*) from datavalues where {l} <> 'Neutral') 
                             as numeric(10,4))) as percentage from datavalues where {l} = 'Love'; '''
-            script2 = f''' select (count(respondentid)*100/cast((select count(*) from datavalues where {l} <> '') 
+            script2 = f''' select (count(respondentid)*100/cast((select count(*) from datavalues where {l} <> 'Neutral') 
                             as numeric(10,4))) as percentage from datavalues where {l} = 'Hate';'''
             cur1.execute(script1)
             cur2.execute(script2)
@@ -387,7 +389,7 @@ def tech5():
     firststr = 'q23frame'
     secondstr = 'q26framelearn'
     frames = ['AngularJS','ASP','Cocoa','Django','Ember','ExpressJS','JSF','NetCore','Padrino','Pyramid',
-                'React','ReactNative','RubyMotion','RubyonRails','Spring','Struts']
+                'React','ReactNative','RubyMotion','RubyonRails','Spring','Struts',]
     result1 = []
     result2 = []
     for l in frames:
@@ -395,21 +397,23 @@ def tech5():
         l2 = secondstr + l
 
         try:
-            script1 = f''' with hmanagers as (select respondentid as rid from datavalues where q16hiringmanager = 'Yes')
-                            select {l1}, (count(respondentid)*100.0/(select count(*) from hmanagers)) as percentage
-                            from datavalues where respondentid in (select rid from hmanagers) and {l1} <> '' group by {l1}; '''
-                            
-            script2 = f'''select {l2}, (count(respondentid)*100.0/(select count(*) from datavalues
-                            where {l2} <> '')) as percentage from datavalues
-                            where {l2} = 'Know' and {l1} <> '' group by {l2}; '''
+            # script1 = f''' with hmanagers as (select respondentid as rid from datavalues where q16hiringmanager = 'Yes')
+            #                 select {l1}, (count(respondentid)*100.0/(select count(*) from hmanagers)) as percentage
+            #                 from datavalues where respondentid in (select rid from hmanagers) and {l1} <> 'Missing or Neither' group by {l1}; '''
+            script1 = f'''select {l1}, (count(respondentid)*100.0/(select count(*) from "HiringManager")) as percentage
+                            from "HiringManager" where {l1} not in ('Missing or Neither', '') group by 1''';
 
+
+            script2 = f'''with t1 as (select * from datavalueswohm where q16hiringmanager = 'No' and q8student = 'Non-Students')
+                            select (count(respondentid)*100.0/(select count(*) from t1)) as percentage from t1 
+                                where {l2} = 'Know'; '''
 
             cur1.execute(script1)
             cur2.execute(script2)
             int1 = cur1.fetchall()
             int2 = cur2.fetchall()
             result1.append(float(int1[0][1]))
-            result2.append(float(int2[0][1]))
+            result2.append(float(int2[0][0]))
         except:
             print('Executing error')
     return render_template('tech5.html',totf = frames,totm = result1,totd = result2)
@@ -635,3 +639,8 @@ if __name__ == '__main__':
     app.run(debug = True)
 
 
+
+
+f'''select {l1}, (count(respondentid)*100.0/(select count(*) from hiringmanager)) as percentage
+
+from hiringmanager where {l1} <> 'Missing or Neither' group by 1''';
